@@ -1,0 +1,30 @@
+Robert Cunningham
+U123456789
+rcunningham@mail.usf.edu
+2
+3
+4
+Joe Dirt
+U987654321
+jdirt@mail.usf.edu
+1
+1
+1
+Tom Brady
+U1298348756
+tbrady@mail.usf.edu
+4
+1
+2
+Bill Bob
+U918273645
+bbob@mail.usf.edu
+4
+4
+4
+Mike Evans
+U546789123
+mevans@mail.usf.edu
+1
+2
+1
