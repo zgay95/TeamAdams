@@ -13,13 +13,13 @@ struct Student{
     char essaygrade[LONG];
     char presentgrade[LONG];
     char termgrade[LONG];
-};
+}students[LONG];
 
 int total_students = 0 ; //global variable to keep track of number of students
 int flip = 0 ; // switch for building the data
 
 /* buildData - called from main(). This function will load data fom a given file into an array of Student Structures */
-int buildData(struct Student students[LONG]){
+int buildData(){
   FILE * fp;
   int i = 0,h = 0;
   //char str[LONG];
@@ -56,44 +56,37 @@ int buildData(struct Student students[LONG]){
   printf("Done reading from file\n");
   
   if(flip==0){ total_students += h ; flip = 1 ;} //total number of students shouldn't change if re reading the file. Only gets updated once.
-  printf("Total number of student: %d\n" , h ) ; 
+  printf("Total number of students: %d\n" , h ) ; 
 
   return total_students ;
 }
 
 // writeData - called from main(). This functions writes data back into the given file. Writes data in such a way we can reread it back on next execution 
-void writeData(struct Student students[LONG]) {
+void writeData() {
   FILE *fp;
-  //int i = 0, j = 0;
-  //char str[60];
-  int size = total_students ; //total students to write to file
-  printf("SIE OF STUDENT IS %d", size ) ;
+  printf("SIZE OF STUDENT IS %d\n", total_students ) ;
   //opening file for reading
-  fp = fopen("OutputStudentData.txt" , "w");
+  fp = fopen("StudentData.txt" , "w");
   //Check is file opened successfully
   if(fp == NULL) {
     perror("Error opening filee");
     exit(1);
    }
   //write the data to file, each data field is put on its own line. 
-  for (size_t i = 0; i < size; i++)
+  for (size_t i = 0; i < total_students; i++)
   {
+    if (students[i].name != " ")
+    {
     fprintf(fp, "%s\n", students[i].name);
     fprintf(fp, "%s\n", students[i].num);
     fprintf(fp, "%s\n", students[i].email);
     fprintf(fp, "%s\n", students[i].essaygrade);
     fprintf(fp, "%s\n", students[i].presentgrade);
     fprintf(fp, "%s\n", students[i].termgrade);
+    }
   }
   //close file 
   fclose(fp);
-}
-/* printData - a util function to print the current state of the student array */
-void printData(struct Student students[LONG], int size){
-    for (size_t i = 0; i < size; i++)
-  {
-    printf("Name: %s\nNum: %s\nemail: %s\n %s %s %s \n",students[i].name,students[i].num,students[i].email,students[i].essaygrade,students[i].presentgrade,students[i].termgrade);
-  }
 }
 
 void printStudent(struct Student s){
@@ -106,27 +99,33 @@ void printStudent(struct Student s){
   printf("-Term Grade: %s \n" , s.termgrade) ;
 }
 
-void newStudent(struct Student students[LONG]){ 
+void newStudent(){ 
   int pos = total_students ; //last position for where to add new student
   //printf("position where adding new student %d\n", pos); 
 
   printf("Enter new student name:");
   fgets(students[pos].name , LONG , stdin ) ;
+  strtok(students[pos].name, "\n");
   printf("Enter new student number:");
   //fgets(newS.num , LONG , stdin ) ;
   fgets(students[pos].num , LONG , stdin ) ;
+  strtok(students[pos].num, "\n");
   printf("Enter new student email:");
   //fgets(newS.email , LONG , stdin ) ;
   fgets(students[pos].email , LONG , stdin ) ;
+  strtok(students[pos].email, "\n");
   printf("Enter new student essay grade:");
   //fgets(newS.essaygrade , LONG , stdin ) ;
   fgets(students[pos].essaygrade , LONG , stdin ) ;
+  strtok(students[pos].essaygrade, "\n");
   printf("Enter new student presentation grade:");
   //fgets(newS.presentgrade , LONG , stdin ) ;
   fgets(students[pos].presentgrade , LONG , stdin ) ;
+  strtok(students[pos].presentgrade, "\n");
   printf("Enter new student term grade:");
   //fgets(newS.termgrade , LONG , stdin ) ;
   fgets(students[pos].termgrade , LONG , stdin ) ;
+  strtok(students[pos].termgrade, "\n");
 
   total_students++; //Increases total_students
   //printStudent(students[pos]) ;
@@ -136,18 +135,21 @@ void newStudent(struct Student students[LONG]){
 }
 
 //Function prompts for name, number, or email to look up that student and returns int position of student 
-int studentLookup(struct Student students[LONG]){
+int studentLookup(){
   printf("\nLookup student\n");
   //char buf[LONG];
   struct Student x ;// Looking for student x
 
   printf("Input field to search by, otherwise leave blank and press enter.\n");
   printf("Student name:");
-  fgets(x.name , LONG , stdin ) ;
+  fgets(x.name , LONG , stdin );
+  strtok(x.name, "\n");
   printf("Student number:");
-  fgets(x.num , LONG , stdin ) ;
+  fgets(x.num , LONG , stdin );
+  strtok(x.num, "\n");
   printf("Student email:");
-  fgets(x.email , LONG , stdin ) ;
+  fgets(x.email , LONG , stdin );
+  strtok(x.email, "\n");
 
   int pos = total_students ; //position of last student
   //printf("position of last student %d\n", pos );
@@ -158,41 +160,55 @@ int studentLookup(struct Student students[LONG]){
     int j = strcmp( students[pos].num , x.num );
     int k = strcmp( students[pos].email , x.email );
 
+      printf("\nValues: %d %d %d",i,j,k);
+
     if ( i==0 || j==0 || k==0 ) return pos ; //If any information of student x matches student[pos] returns pos of student
     pos--; //Decrease position until first student
   }
   return -1; //return -1 if student not found
 }
 
-void deleteStudent(struct Student students[LONG]){
+void deleteStudent(){
   printf("\nTo delete student:\n");
   struct Student t = {"0"};
-  int pos = total_students ; // position of last student
-  int x = studentLookup(students); //Position of student to delete
+  int x = studentLookup(); //Position of student to delete
 
-  students[x] = students[pos] ; //Copies last student on the array into the position where student x is.
-  students[pos] = t ;
+if (x != -1)
+{
+  strcpy(students[x].name," ");
+  strcpy(students[x].num," ");
+  strcpy(students[x].email," ");
+  strcpy(students[x].essaygrade," ");
+  strcpy(students[x].presentgrade," ");
+  strcpy(students[x].termgrade," ");
   total_students--; //subtracts the one student deleted from total student count
-
   printf("Done deleting a student.\n");
-  printf("Total number of students: %d\n" , total_students ) ; 
+  printf("Total number of students: %d\n" , total_students ) ;
+}
+else
+{
+  printf("Could not find student.\n");
+  printf("Total number of students: %d\n" , total_students ) ;
+}
+
+
+ 
   return ;
 }
 
-void retrieveInfo(struct Student students[LONG]){
+void retrieveInfo(){
   printf("Retrieve information of a student.\n");
-  int i = studentLookup(students) ; //Functions that returns position of student x
+  int i = studentLookup() ; //Functions that returns position of student x
   //printf("%d, %s \n", i , students[i].name);
   if (i == -1 ) {printf("Student not found.\n"); return ;} //studentLookup returns -1 if student not found
   
   printStudent(students[i]); //Prints information of student x
   printf("Done retrieving student information.\n") ;
 }
-void updateStudent(struct Student students[LONG]){
+void updateStudent(){
 
 }
 void menu(){
-  struct Student students[LONG];
   char op[1] ;
   char buf[LONG] ;
 
@@ -211,11 +227,11 @@ void menu(){
 
     fgets(buf , LONG, stdin) ; // reads in empty char
     switch(op[0]){ //uses first char typed as the switch option
-      case 'r': buildData(students); break ;
-      case 'w': writeData(students); break ;
-      case 'a': newStudent(students); break ;
-      case 'd': deleteStudent(students); break ; 
-      case 'i': retrieveInfo(students); break ;
+      case 'r': buildData(); break ;
+      case 'w': writeData(); break ;
+      case 'a': newStudent(); break ;
+      case 'd': deleteStudent(); break ; 
+      case 'i': retrieveInfo(); break ;
       case 'u': break;
       case 'q': exit(0);
       default:
@@ -228,14 +244,6 @@ void menu(){
 
 /* main - driving function for the program */
 int main(){
-  /* Create array of Student Structs and size. Array has max size of 40. */
-  //struct Student students[LONG];
-  //int size = buildData(students);
-
-  //printData(students,size);
-
-
-  //writeData(students,size);
 
   menu();
 
