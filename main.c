@@ -88,17 +88,17 @@ void writeData() {
   //close file 
   fclose(fp);
 }
-
+/* printStudent - Prints Student data for passed student */
 void printStudent(struct Student s){
 
-  printf("\nStudent Name: %s" , s.name) ;
-  printf("-Number: %s" , s.num) ;
-  printf("-Email: %s" , s.email) ;
-  printf("-Essay Grade: %s" , s.essaygrade) ;
-  printf("-Presentation Grade: %s" , s.presentgrade) ;
+  printf("\nStudent Name: %s\n" , s.name) ;
+  printf("-Number: %s\n" , s.num) ;
+  printf("-Email: %s\n" , s.email) ;
+  printf("-Essay Grade: %s\n" , s.essaygrade) ;
+  printf("-Presentation Grade: %s\n" , s.presentgrade) ;
   printf("-Term Grade: %s \n" , s.termgrade) ;
 }
-
+/* newStudent - add new student to struct array, recieve input from user */
 void newStudent(){ 
   int pos = total_students ; //last position for where to add new student
   //printf("position where adding new student %d\n", pos); 
@@ -133,11 +133,9 @@ void newStudent(){
   printf("\nDone adding new student.\n" );
   printf("Total number of students: %d\n" , total_students ) ; 
 }
-
 //Function prompts for name, number, or email to look up that student and returns int position of student 
 int studentLookup(){
   printf("\nLookup student\n");
-  //char buf[LONG];
   struct Student x ;// Looking for student x
 
   printf("Input field to search by, otherwise leave blank and press enter.\n");
@@ -160,42 +158,36 @@ int studentLookup(){
     int j = strcmp( students[pos].num , x.num );
     int k = strcmp( students[pos].email , x.email );
 
-      printf("\nValues: %d %d %d",i,j,k);
-
     if ( i==0 || j==0 || k==0 ) return pos ; //If any information of student x matches student[pos] returns pos of student
     pos--; //Decrease position until first student
   }
   return -1; //return -1 if student not found
 }
-
+/* deleteStudent - deletes student from struct array. */
 void deleteStudent(){
   printf("\nTo delete student:\n");
   struct Student t = {"0"};
   int x = studentLookup(); //Position of student to delete
 
-if (x != -1)
-{
-  strcpy(students[x].name," ");
-  strcpy(students[x].num," ");
-  strcpy(students[x].email," ");
-  strcpy(students[x].essaygrade," ");
-  strcpy(students[x].presentgrade," ");
-  strcpy(students[x].termgrade," ");
-  total_students--; //subtracts the one student deleted from total student count
-  printf("Done deleting a student.\n");
-  printf("Total number of students: %d\n" , total_students ) ;
+  if (x != -1)
+  {
+    strcpy(students[x].name," ");
+    strcpy(students[x].num," ");
+    strcpy(students[x].email," ");
+    strcpy(students[x].essaygrade," ");
+    strcpy(students[x].presentgrade," ");
+    strcpy(students[x].termgrade," ");
+    total_students--; //subtracts the one student deleted from total student count
+    printf("Done deleting a student.\n");
+    printf("Total number of students: %d\n" , total_students ) ;
+  }
+  else
+  {
+    printf("Could not find student.\n");
+    printf("Total number of students: %d\n" , total_students ) ;
+  }
 }
-else
-{
-  printf("Could not find student.\n");
-  printf("Total number of students: %d\n" , total_students ) ;
-}
-
-
- 
-  return ;
-}
-
+/* retrieveinfo - retrieves info and prints specific student data */
 void retrieveInfo(){
   printf("Retrieve information of a student.\n");
   int i = studentLookup() ; //Functions that returns position of student x
@@ -205,9 +197,50 @@ void retrieveInfo(){
   printStudent(students[i]); //Prints information of student x
   printf("Done retrieving student information.\n") ;
 }
+/* updateStudent - updates student info */
 void updateStudent(){
+  printf("\nTo update student:\n");
+  int k = studentLookup(); //Position of student to delete
+  struct Student x ;// Looking for student x
+
+    if (k != -1)
+  {
+  printf("Input ALL fields to update.\n");
+  printf("Student name:");
+  fgets(x.name , LONG , stdin );
+  strtok(x.name, "\n");
+  printf("Student number:");
+  fgets(x.num , LONG , stdin );
+  strtok(x.num, "\n");
+  printf("Student email:");
+  fgets(x.email , LONG , stdin );
+  strtok(x.email, "\n");
+  printf("Student essay grade::");
+  fgets(x.essaygrade , LONG , stdin );
+  strtok(x.essaygrade, "\n");
+  printf("Student presentation grade:");
+  fgets(x.presentgrade , LONG , stdin );
+  strtok(x.presentgrade, "\n");
+  printf("Student term grade:");
+  fgets(x.termgrade , LONG , stdin );
+  strtok(x.termgrade, "\n");
+  
+  strcpy(students[k].name,x.name);
+  strcpy(students[k].num,x.num);
+  strcpy(students[k].email,x.email);
+  strcpy(students[k].essaygrade,x.essaygrade);
+  strcpy(students[k].presentgrade,x.presentgrade);
+  strcpy(students[k].termgrade,x.termgrade);
+    
+    printf("Done updating a student.\n");
+  }
+  else
+  {
+    printf("Could not find student.\n");
+  }
 
 }
+/* menu - main menu and driver for program */
 void menu(){
   char op[1] ;
   char buf[LONG] ;
@@ -232,20 +265,16 @@ void menu(){
       case 'a': newStudent(); break ;
       case 'd': deleteStudent(); break ; 
       case 'i': retrieveInfo(); break ;
-      case 'u': break;
+      case 'u': updateStudent(); break;
       case 'q': exit(0);
       default:
         printf("Wrong commmand. Must be r, w, a, d, i, u, or q to exit program.\n");
     }
-
   }
-
 }
 
 /* main - driving function for the program */
 int main(){
-
   menu();
-
   return 0;
 }
