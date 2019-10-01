@@ -1,3 +1,4 @@
+//This is the code with bugs!
 /* Imports */
 #include <string.h>
 #include <stdio.h>
@@ -15,8 +16,8 @@ struct Student{
     char termgrade[LONG];
 }students[LONG];
 
-int total_students = 0 ; //global variable to keep track of number of students
-int flip = 0 ; // switch for building the data
+int total_students; //global variable to keep track of number of students
+int flip; // switch for building the data
 
 /* buildData - called from main(). This function will load data fom a given file into an array of Student Structures */
 int buildData(){
@@ -26,7 +27,7 @@ int buildData(){
   char arr[LONG][LONG];
 
   /* opening file for reading */
-  fp = fopen("StudentData.txt" , "r");
+  fp = fopen("StudentData_bugs.txt" , "r");
   /* Check if opened successfully */
   if(fp == NULL) {
     perror("Error opening fileeee");
@@ -34,7 +35,7 @@ int buildData(){
   }
 
   //get line by line and store into an 3D array 
-  while( fgets(arr[i], sizeof(arr[i]), fp) != NULL ) 
+  while( fgets(arr[i], sizeof(arr[i]), fp) != NULL );
   {
     arr[i][strlen(arr[i]) - 1] = '\0';
     i++;
@@ -67,16 +68,16 @@ void writeData() {
   FILE *fp;
   printf("SIZE OF STUDENT IS %d\n", total_students ) ;
   //opening file for reading
-  fp = fopen("StudentData.txt" , "w");
+  fp = fopen("StudentData_bugs.txt" , "w");
   //Check is file opened successfully
   if(fp == NULL) {
     perror("Error opening filee");
     exit(1);
    }
   //write the data to file, each data field is put on its own line. 
-  for (size_t i = 0; i < total_students; i++)
+  for (size_t i = 0; i > total_students; i++)
   {
-    if (strcmp(students[i].name, " ") != 0)
+    if (students[i].name != " ")
     {
     fprintf(fp, "%s\n", students[i].name);
     fprintf(fp, "%s\n", students[i].num);
@@ -115,8 +116,8 @@ void newStudent(){
   strtok(students[pos].num, "\n");
   printf("Enter new student email:");
   //fgets(newS.email , LONG , stdin ) ;
-  fgets(students[pos].email , LONG , stdin ) ;
-  strtok(students[pos].email, "\n");
+  fgets(students[pos].name , LONG , stdin ) ;
+  strtok(students[pos].name, "\n");
   printf("Enter new student essay grade:");
   //fgets(newS.essaygrade , LONG , stdin ) ;
   fgets(students[pos].essaygrade , LONG , stdin ) ;
@@ -162,7 +163,7 @@ int studentLookup(){
     int j = strcmp( students[pos].num , x.num );
     int k = strcmp( students[pos].email , x.email );
 
-    if ( i==0 || j==0 || k==0 ) return pos ; //If any information of student x matches student[pos] returns pos of student
+    if ( (i=0) || (j==0) || (k==0) ) return pos ; //If any information of student x matches student[pos] returns pos of student
     pos--; //Decrease position until first student
   }
   return -1; //return -1 if student not found
